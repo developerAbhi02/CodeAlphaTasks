@@ -17,12 +17,19 @@
         // Register service worker for notification support
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
+                // Use relative path instead of absolute path for better deployment compatibility
+                navigator.serviceWorker.register('sw.js', {scope: './'})
                     .then(function(registration) {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        // Get permission for notifications right after service worker registration
+                        if ("Notification" in window) {
+                            Notification.requestPermission().then(function(permission) {
+                                console.log('Notification permission status:', permission);
+                            });
+                        }
                     })
                     .catch(function(error) {
-                        console.log('ServiceWorker registration failed: ', error);
+                        console.error('ServiceWorker registration failed: ', error);
                     });
             });
         }
