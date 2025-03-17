@@ -808,14 +808,18 @@ function requestNotificationPermission() {
         return Promise.resolve(false);
     }
     
-    // On mobile, we need to use a different approach
+    // Detect mobile and Chrome
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isChrome = /Chrome/i.test(navigator.userAgent) && /Google Inc/i.test(navigator.vendor);
+    const isChromeOnMobile = isMobile && isChrome;
     
     if (Notification.permission === "granted") {
         return Promise.resolve(true);
     } else if (Notification.permission === "denied") {
-        // For mobile devices, provide more specific instructions
-        if (isMobile) {
+        // For Chrome on mobile, provide specific instructions
+        if (isChromeOnMobile) {
+            showToast("To allow notifications on Chrome mobile: tap the lock icon in the address bar → Site settings → Notifications → Allow", "warning");
+        } else if (isMobile) {
             showToast("Please enable notifications in your device settings for this website", "warning");
         } else {
             showToast("Notification access denied! Check your browser settings to enable notifications", "warning");
@@ -825,13 +829,20 @@ function requestNotificationPermission() {
         return Promise.resolve(false);
     }
     
+    // For Chrome on mobile - provide immediate feedback before the permission request
+    if (isChromeOnMobile) {
+        showToast("When prompted, tap 'Allow' to enable notifications. Check the address bar if you don't see a prompt.", "info");
+    }
+    
     return Notification.requestPermission().then(permission => {
         if (permission === "granted") {
             showToast("Notifications are now on! I'll be your personal reminder!", "success");
             return true;
         } else {
-            // For mobile, show more helpful message
-            if (isMobile) {
+            // For Chrome on mobile, show more specific message
+            if (isChromeOnMobile) {
+                showToast("To allow notifications later, tap the lock icon in Chrome's address bar → Site settings → Notifications → Allow", "info");
+            } else if (isMobile) {
                 showToast("To enable notifications, go to your browser settings and allow notifications for this site", "info");
             } else {
                 showToast("You'll need to enable notifications in your browser settings", "info");
@@ -934,8 +945,10 @@ function sendNotification(title, message) {
     const blob = new Blob([svgLogo], {type: 'image/svg+xml'});
     const iconUrl = URL.createObjectURL(blob);
     
-    // Check if we're on mobile
+    // Check if we're on mobile and on Chrome
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isChrome = /Chrome/i.test(navigator.userAgent) && /Google Inc/i.test(navigator.vendor);
+    const isChromeOnMobile = isMobile && isChrome;
     
     // Create and show the notification
     if (Notification.permission === "granted") {
@@ -943,23 +956,37 @@ function sendNotification(title, message) {
         const notificationOptions = {
             body: message + additionalMessage,
             icon: iconUrl,
-            vibrate: isMobile ? [100, 50, 100] : undefined, // Add vibration for mobile
+            vibrate: isMobile ? [200, 100, 200] : undefined, // Stronger vibration for better mobile alerts
             requireInteraction: !isMobile, // On desktop, require interaction to dismiss
-            silent: false // Play sound
+            silent: false, // Play sound
+            tag: 'taskbell-notification', // Prevent notification stacking on mobile
+            renotify: true // Force notification on mobile
         };
         
-        const notification = new Notification(title, notificationOptions);
-        
-        notification.onclick = function() {
-            window.focus();
-            this.close();
-            URL.revokeObjectURL(iconUrl); // Clean up the blob URL
-        };
-        
-        // Clean up the blob URL after notification timeout
-        setTimeout(() => {
-            URL.revokeObjectURL(iconUrl);
-        }, 10000);
+        // Try-catch to handle any unexpected Chrome mobile issues
+        try {
+            const notification = new Notification(title, notificationOptions);
+            
+            notification.onclick = function() {
+                window.focus();
+                this.close();
+                URL.revokeObjectURL(iconUrl); // Clean up the blob URL
+            };
+            
+            // Clean up the blob URL after notification timeout
+            setTimeout(() => {
+                URL.revokeObjectURL(iconUrl);
+            }, 10000);
+            
+            // For Chrome on mobile, create a fallback toast notification
+            if (isChromeOnMobile) {
+                showToast(message, 'warning');
+            }
+        } catch (error) {
+            // Fallback to toast notification if there's an error
+            console.error("Notification error:", error);
+            showToast(message, 'warning');
+        }
     }
 }
 
@@ -1294,6 +1321,9 @@ function initApp() {
         if (Notification.permission !== "granted") {
             requestNotificationPermission();
         } else {
+            // Register service worker for better mobile support
+            registerServiceWorker();
+            
             // Schedule notifications for existing tasks
             tasks.forEach(task => {
                 if (!task.completed) {
@@ -1301,6 +1331,31 @@ function initApp() {
                 }
             });
         }
+    }
+}
+
+// Register service worker for better notification support on mobile
+function registerServiceWorker() {
+    // Check if service workers are supported
+    if ('serviceWorker' in navigator) {
+        // Try to register a minimal service worker for notification support
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                // Successfully registered service worker
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                
+                // Detect Chrome on mobile
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const isChrome = /Chrome/i.test(navigator.userAgent) && /Google Inc/i.test(navigator.vendor);
+                
+                if (isMobile && isChrome) {
+                    console.log('Chrome mobile detected, optimizing notification support');
+                }
+            })
+            .catch(function(error) {
+                // Service worker registration failed
+                console.log('ServiceWorker registration failed: ', error);
+            });
     }
 }
 

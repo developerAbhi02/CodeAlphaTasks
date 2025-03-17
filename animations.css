@@ -359,7 +359,7 @@ input[type="datetime-local"]:focus {
 
 /* Special animation for active notification bell */
 #notification-toggle.on i {
-    color: #ffffff;
+    color: #b0b0b0;
     animation: pulse 2s infinite;
 }
 
