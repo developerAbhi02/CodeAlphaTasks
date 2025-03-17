@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TASKBELL - Your Smart Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <div class="logo-icon">
+                <!-- Simplified Bell Logo SVG -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#FF6B00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12,2 C9,2 6,4 6,9 L6,13 L4,16 L20,16 L18,13 L18,9 C18,4 15,2 12,2 Z" fill="rgba(255, 107, 0, 0.08)" class="bell" />
+                    <path d="M9,16 C9,18.5 10.5,20 12,20 C13.5,20 15,18.5 15,16" class="bell-bottom" />
+                    <circle cx="12" cy="9" r="4" fill="rgba(255, 107, 0, 0.08)" class="bell-center" />
+                </svg>
+            </div>
+            <div class="logo-text">TASKBELL</div>
+        </div>
+        <div class="nav-buttons">
+            <button id="language-toggle" title="Change Language / भाषा बदलें">
+                <i class="fas fa-language"></i>
+            </button>
+            <button id="notification-toggle" title="Notifications">
+                <i class="fas fa-bell"></i>
+            </button>
+            <button id="theme-toggle" title="Toggle Dark/Light Mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="todo-app">
+            <h2>Today's Tasks <img src="https://img.icons8.com/fluency/48/000000/today.png" class="header-icon" alt="Today"></h2>
+            
+            <div class="task-form">
+                <h3><i class="fas fa-plus-circle"></i> Add New Task</h3>
+                <div class="input-group">
+                    <label for="task-input"><i class="fas fa-tasks"></i> Task Name</label>
+                    <input type="text" id="task-input" placeholder="What do you need to do?">
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="far fa-calendar-alt"></i> Deadline</label>
+                    <div class="deadline-inputs">
+                        <div class="date-input">
+                            <label for="deadline-date">Date</label>
+                            <input type="date" id="deadline-date">
+                        </div>
+                        <div class="time-input">
+                            <label for="deadline-time">Time</label>
+                            <input type="time" id="deadline-time">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label><i class="fas fa-flag"></i> Importance Level</label>
+                    <div class="importance-selector">
+                        <div class="importance-option" data-importance="low">
+                            <span class="importance-dot low"></span>
+                            <span class="importance-label">Low</span>
+                        </div>
+                        <div class="importance-option active" data-importance="medium">
+                            <span class="importance-dot medium"></span>
+                            <span class="importance-label">Medium</span>
+                        </div>
+                        <div class="importance-option" data-importance="high">
+                            <span class="importance-dot high"></span>
+                            <span class="importance-label">High</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="add-button">
+                    <i class="fas fa-plus"></i> Add Task
+                </button>
+            </div>
+            
+            <div class="filters-container">
+                <h3><i class="fas fa-filter"></i> Filter Tasks</h3>
+                <div class="filters">
+                    <div class="filter-option active" data-filter="all">All</div>
+                    <div class="filter-option" data-filter="active">Active</div>
+                    <div class="filter-option" data-filter="completed">Completed</div>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-list-ul"></i> Your Tasks <a href="#" id="how-to-link" title="Learn how to mark tasks as completed">(How to complete?)</a></h3>
+            
+            <div class="task-list-container">
+                <ul id="list-container"></ul>
+                
+                <div id="empty-state" class="empty-state">
+                    <img src="https://img.icons8.com/fluency/96/000000/edit-calendar.png" class="empty-icon" alt="No tasks">
+                    <h3>No Tasks Yet</h3>
+                    <p>Add your first task to get started!</p>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <button id="clear-all">
+                    <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+                <div class="task-stats">
+                    <span id="completed-count">0</span>/<span id="task-counter">0</span> tasks completed
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+    
+    <!-- How to complete tasks dialog -->
+    <div id="how-to-dialog" class="dialog-overlay">
+        <div class="dialog-content">
+            <h3><i class="fas fa-check-circle"></i> How to Complete Tasks</h3>
+            <p>Marking tasks as completed is easy in TASKBELL. Follow these simple steps:</p>
+            
+            <div class="how-to-steps">
+                <div class="how-to-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Find your task</h4>
+                        <p>Locate the task you want to mark as completed in your task list.</p>
+                    </div>
+                </div>
+                
+                <div class="how-to-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Click the checkbox</h4>
+                        <p>Click the checkbox on the left side of the task to mark it as completed.</p>
+                    </div>
+                </div>
+                
+                <div class="how-to-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Task completed!</h4>
+                        <p>The task will be marked as completed and will show a checkmark. You can uncheck it anytime to mark it as incomplete again.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dialog-buttons">
+                <button id="got-it-button">Got It!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div id="confirm-dialog" class="dialog-overlay">
+        <div class="dialog-content">
+            <h3 id="dialog-title"></h3>
+            <p id="dialog-message"></p>
+            <div class="dialog-buttons">
+                <button id="dialog-cancel">Cancel</button>
+                <button id="dialog-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,493 @@
+/* TASKBELL Logo and UI Animations */
+
+/* Simple Bell Logo Animations */
+@keyframes simpleBellRing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    50% { transform: rotate(3deg); }
+    75% { transform: rotate(-2deg); }
+}
+
+@keyframes simpleGlow {
+    0%, 100% { 
+        filter: drop-shadow(0 0 2px rgba(255, 107, 0, 0.3));
+    }
+    50% { 
+        filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.4));
+    }
+}
+
+/* Apply simple animations to logo elements */
+.logo-icon:hover .bell {
+    animation: simpleBellRing 1s ease-in-out;
+    transform-origin: 12px 2px;
+}
+
+.logo-icon {
+    animation: simpleGlow 4s ease-in-out infinite;
+}
+
+.logo-text {
+    color: #FF6B00;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logo:hover .logo-text {
+    text-shadow: 0 0 5px rgba(255, 107, 0, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Toggle Animations - Refined */
+@keyframes toggleOn {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes toggleOff {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+/* Apply animations to navbar buttons */
+.navbar button:hover {
+    transform: translateY(-2px);
+    transition: transform 0.3s ease;
+}
+
+.navbar button.on {
+    animation: toggleOn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.navbar button:not(.on):active {
+    animation: toggleOff 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Theme toggle icon transition */
+#theme-toggle i {
+    transition: all 0.3s ease;
+}
+
+/* Language toggle icon transition */
+#language-toggle i {
+    transition: all 0.3s ease;
+}
+
+/* Notification toggle icon transition */
+#notification-toggle i {
+    transition: all 0.3s ease;
+}
+
+/* Enhanced bell shake for notification alert - subtle version */
+@keyframes enhancedShake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+#notification-toggle.has-notifications i {
+    animation: enhancedShake 1.5s cubic-bezier(.36,.07,.19,.97) both;
+    transform-origin: top center;
+}
+
+/* Toast animation */
+@keyframes toast-enter {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.toast.show {
+    animation: toast-enter 0.5s forwards ease-out;
+}
+
+@keyframes toast-exit {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.toast.hide {
+    animation: toast-exit 0.5s forwards ease-in;
+}
+
+/* Progress bar animation */
+.progress-bar {
+    background-size: 15px 15px;
+    background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    animation: progress-stripes 1s linear infinite;
+}
+
+@keyframes progress-stripes {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 15px 0;
+    }
+}
+
+/* Logo text gradient animation */
+@keyframes gradientText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Task importance animations */
+.importance-option:hover .importance-dot {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+.importance-option.active .importance-dot {
+    animation: pulse 2s infinite;
+}
+
+/* Empty state animation */
+.empty-state img {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Dialog animation enhancements */
+.dialog-content {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dialog-overlay.active .dialog-content {
+    transform: scale(1) translateY(0);
+}
+
+.dialog-content {
+    transform: scale(0.9) translateY(20px);
+}
+
+/* Step number animation */
+.step-number {
+    position: relative;
+    overflow: hidden;
+}
+
+.step-number::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transform: scale(0.5);
+    animation: ripple 2s ease-out infinite;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+/* Checkbox hover effect enhancement */
+ul li .checkbox-custom::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+ul li .checkbox-custom:hover::before {
+    width: 40px;
+    height: 40px;
+}
+
+/* Page load animation */
+@keyframes fadeInUpContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.todo-app {
+    animation: fadeInUpContent 0.6s ease-out;
+}
+
+/* Filter animation */
+.filter-option {
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-option::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gradient);
+    transform: translateX(-50%);
+    transition: width 0.3s ease;
+}
+
+.filter-option:hover::before {
+    width: 70%;
+}
+
+.filter-option.active::before {
+    width: 0;
+}
+
+/* Time field focus animation */
+input[type="datetime-local"]:focus {
+    animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        border-color: var(--primary-color);
+    }
+    50% {
+        border-color: transparent;
+    }
+    100% {
+        border-color: var(--primary-color);
+    }
+}
+
+/* Add button animation */
+.task-form button:active {
+    transform: scale(0.98);
+}
+
+/* Float animation for logo and elements */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+/* Navbar button animations */
+.nav-buttons button {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-buttons button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 81, 47, 0.2) 0%, rgba(255, 81, 47, 0) 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.nav-buttons button:hover::after {
+    width: 150%;
+    height: 150%;
+}
+
+.nav-buttons button i {
+    position: relative;
+    z-index: 1;
+}
+
+/* Enhanced notification bell ring animation */
+@keyframes enhancedRing {
+    0%, 100% { transform: rotate(0); }
+    15% { transform: rotate(-15deg); }
+    30% { transform: rotate(15deg); }
+    45% { transform: rotate(-12deg); }
+    60% { transform: rotate(12deg); }
+    75% { transform: rotate(-8deg); }
+    85% { transform: rotate(8deg); }
+    92% { transform: rotate(-4deg); }
+    96% { transform: rotate(4deg); }
+}
+
+.ring-animation i {
+    animation: enhancedRing 1s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    transform-origin: top center;
+}
+
+/* Special animation for active notification bell */
+#notification-toggle.on i {
+    color: #ffffff;
+    animation: pulse 2s infinite;
+}
+
+/* Enhanced language toggle animation */
+@keyframes languageRotate {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(180deg); }
+}
+
+#language-toggle.on i {
+    animation: languageRotate 0.5s ease-out forwards;
+}
+
+/* Enhanced theme toggle animation */
+@keyframes themeToggle {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+#theme-toggle.on i {
+    animation: themeToggle 0.8s ease-out;
+}
+
+/* Enhanced hover effect for all nav buttons */
+.nav-buttons button:hover i {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+/* Help button pulse on hover */
+#help-button:hover i {
+    animation: pulse 1s infinite;
+}
+
+/* Enhanced task hover effect */
+ul li:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+/* Clock Hands Animation */
+@keyframes clockHands {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Checkmark Animation */
+@keyframes drawCheckmark {
+    0% { stroke-dashoffset: 20; opacity: 0.5; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* Sound Wave Animation */
+@keyframes soundWave {
+    0% { opacity: 0; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* Logo Hover Effects */
+.logo-icon {
+    filter: drop-shadow(0 0 8px rgba(255, 48, 25, 0.5));
+    transition: all 0.3s ease;
+}
+
+.logo-icon:hover {
+    filter: drop-shadow(0 0 12px rgba(255, 48, 25, 0.8));
+    transform: scale(1.05);
+}
+
+/* Bell Animation on Hover */
+.logo-icon:hover path:first-of-type {
+    animation: bellRing 1s ease-in-out;
+    transform-origin: 12px 2px;
+}
+
+/* Clock Hand Animation */
+.logo-icon:hover path[d*="12,9 L15,9"] {
+    animation: clockHands 4s linear infinite;
+    transform-origin: 12px 9px;
+}
+
+.logo-icon:hover path[d*="12,9 L12,6"] {
+    animation: clockHands 24s linear infinite;
+    transform-origin: 12px 9px;
+}
+
+/* Checkmark Animation */
+.logo-icon .checkmark {
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    opacity: 0;
+}
+
+.logo-icon:hover .checkmark {
+    animation: drawCheckmark 1s ease-out forwards;
+}
+
+/* Sound Wave Animation */
+.logo-icon .sound-wave {
+    opacity: 0;
+}
+
+.logo-icon:hover .sound-wave {
+    animation: soundWave 2s ease-in-out infinite;
+    transform-origin: 12px 9px;
+}
+
+/* Logo Text Animation */
+.logo-text {
+    background: linear-gradient(90deg, #FF3019, #9C27B0, #FF8C00);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 6s ease infinite;
+    transition: all 0.3s ease;
+}
+
+.logo:hover .logo-text {
+    text-shadow: 0 0 15px rgba(255, 48, 25, 0.7);
+    transform: translateY(-2px);
+}
+
+@keyframes gradientText {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+} 

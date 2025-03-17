@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convert SVG to ICO</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 20px 0;
+        }
+        button {
+            background: #FF6B00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>TASKBELL Favicon Generator</h1>
+    <p>This tool will convert the SVG to favicon.ico format. Click the button below to download the favicon.ico file.</p>
+    
+    <div>
+        <h3>Original SVG:</h3>
+        <img src="favicon.svg" width="64" height="64">
+    </div>
+
+    <canvas id="canvas" width="32" height="32"></canvas>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    
+    <div>
+        <button id="download">Download favicon.ico</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const img = new Image();
+            img.src = 'favicon.svg';
+            
+            img.onload = function() {
+                // Draw 32x32 icon
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, 32, 32);
+                
+                // Draw 16x16 icon
+                const canvas16 = document.getElementById('canvas16');
+                const ctx16 = canvas16.getContext('2d');
+                ctx16.drawImage(img, 0, 0, 16, 16);
+                
+                // Set up download button
+                document.getElementById('download').addEventListener('click', function() {
+                    // Convert canvas to blob
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'favicon.ico';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    });
+                });
+            };
+        });
+    </script>
+</body>
+</html> 
